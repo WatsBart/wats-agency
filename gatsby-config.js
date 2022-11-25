@@ -6,6 +6,8 @@ module.exports = {
     siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
   },
   plugins: [
+    `gatsby-plugin-sharp`,
+    `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-source-wordpress`,
       options: {
