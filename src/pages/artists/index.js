@@ -11,38 +11,40 @@ import {
   description
 } from "../../page.module.css"
 
+// Imports
+
 const ArtistsPage = ({
   data: {
-    allWpArtist: {edges}, 
-    wpPage: {artistsFields}
-  }
+    allWpArtist: { edges },
+    wpPage: { artistsFields },
+  },
 }) => {
   const image = getImage(artistsFields.picture.localFile)
   return (
-    <Layout pageTitle="Artists of Wats Agency">
+    <Layout pageTitle="Artists of Inghelbrecht Agency">
       <GatsbyImage
-        className={hero}
+      className={hero} 
         image={image}
         alt={artistsFields.picture.altText}
       />
       <section className={section}>
         <h2 className={subtitle}>{artistsFields.title}</h2>
         <div
-          className={description}
+        className={description}
           dangerouslySetInnerHTML={{
-            __html: artistsFields.description
+            __html: artistsFields.description,
           }}
         />
         <div className={artists}>
-          {edges.map(({node: artist}) => {
-            <Artist key={artist.id} slug={artist.slug} artist={artist}/>
-          })}
+          {edges.map(({ node: artist }) => (
+            <Artist key={artist.id} slug={artist.slug} artist={artist} />
+          ))}
         </div>
       </section>
-      
     </Layout>
   )
 }
+// Page Query
 
 export const query = graphql`
 query {

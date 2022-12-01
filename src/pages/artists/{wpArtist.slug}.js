@@ -2,52 +2,146 @@ import { graphql } from 'gatsby'
 import * as React from 'react'
 import Layout from '../../components/layout'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
+import {
+  header,
+  headerInfo,
+  headerPicture,
+  artistName,
+  fullName,
+  artistRoles,
+  artistDescription,
+  artistInfo,
+  artistPictures,
+  artistPicture
+} from "../../page.module.css"
 
-const ArtistPage = ({data: {wpArtist: {artistMeta: artist}}}) => {
+const ArtistPage = ({
+  data: {
+    wpArtist: {
+      artistMeta: artist,
+      roles: { nodes: roles}
+    }
+  }
+}) => {
     const image = getImage(artist.profilePicture.localFile)
+    const picture1 = getImage(artist.picture1.localFile)
+    const picture2 = getImage(artist.picture2.localFile)
+    const picture3 = getImage(artist.picture3.localFile)
     return(
-        <Layout pageTitle = "Artiesten Template">
-            <div>
-                <GatsbyImage image={image} alt={artist.profilePicture.altText} />
-                <h3>{artist.artistName}</h3>
-                <h1>{artist.firstName} {artist.lastName}</h1>
-                <div dangerouslySetInnerHTML={{__html: artist.description}}/>
-                <p>Email: {artist.email}</p>
-                <p>Phone: {artist.phone}</p>
-                <p>Height: {artist.height}</p>
-                <p>Shirt Size: {artist.shirtSize}</p>
-                <p>Shoe Size: {artist.shoeSize}</p>
-                <p>Origin: {artist.origin}</p>
-            </div>
+        <Layout pageTitle = "Artist Template">
+            <section className={header}>
+              <article className={headerInfo}>
+                {artist.artistName && (
+                  <h3 className={artistName}>{artist.artistName}</h3>
+                )}
+                <div className={artistRoles}>
+                  {roles.map((role,i) => (
+                    <span key={i}>
+                      {role.name} {i + 1 < roles.length && "- "}
+                    </span>
+                  ))}
+                </div>
+                <h1 className={fullName}>
+                  {artist.firstName} {artist.lastName}
+                </h1>
+                <div 
+                  className={artistDescription}
+                  dangerouslySetInnerHTML={{__html: artist.description}}
+                />
+                <p><span classname={artistInfo}>Email:</span> {artist.email}</p>
+                <p><span classname={artistInfo}>Phone:</span> {artist.phone}</p>
+                <p><span classname={artistInfo}>Height:</span> {artist.height}</p>
+                <p><span classname={artistInfo}>Shirt Size:</span> {artist.shirtSize}</p>
+                <p><span classname={artistInfo}>Shoe Size:</span> {artist.shoeSize}</p>
+                <p><span classname={artistInfo}>Origin:</span> {artist.origin}</p>
+              </article>
+              <GatsbyImage 
+                className={headerPicture}
+                image={image} 
+                alt={artist.profilePicture.altText} 
+              />
+            </section>
+            <section className={artistPictures}>
+              {picture1 && (
+                <GatsbyImage
+                  className={artistPicture}
+                  image={picture1}
+                  alt={artist.picture1.altText}
+                />
+              )}
+              {picture2 && (
+                <GatsbyImage
+                  className={artistPicture}
+                  image={picture2}
+                  alt={artist.picture2.altText}
+                />
+              )}
+              {picture3 && (
+                <GatsbyImage
+                  className={artistPicture}
+                  image={picture3}
+                  alt={artist.picture3.altText}
+                />
+              )}
+            </section>
         </Layout>
     )
 }
 
 export const query = graphql`
-  query MyQuery($id: String) {
-    wpArtist(id: {eq: $id}) {
-      artistMeta {
-        firstName
-        lastName
-        email
-        description
-        artistName
-        height
-        origin
-        phoneNumber
-        shirtSize
-        shoeSize
-        profilePicture {
-          localFile {
-            childImageSharp {
-              gatsbyImageData(placeholder: BLURRED)
-            }
+query ($slug: String) {
+  wpArtist(slug: {eq: $slug}) {
+    artistMeta {
+      firstName
+      lastName
+      email
+      description
+      artistName
+      height
+      origin
+      phoneNumber
+      shirtSize
+      shoeSize
+      profilePicture {
+        localFile {
+          childImageSharp {
+            gatsbyImageData(placeholder: BLURRED)
           }
-          altText
+        }
+        altText
+      }
+      picture1 {
+        altText
+        localFile {
+          childImageSharp {
+            gatsbyImageData(placeholder: BLURRED)
+          }
+        }
+      }
+      picture2 {
+        altText
+        localFile {
+          childImageSharp {
+            gatsbyImageData(placeholder: BLURRED)
+          }
+        }
+      }
+      picture3 {
+        altText
+        localFile {
+          childImageSharp {
+            gatsbyImageData(placeholder: BLURRED)
+          }
         }
       }
     }
+    roles {
+			nodes {
+				name
+      }
+    }
   }
+}
 `
 
 export default ArtistPage
